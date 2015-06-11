@@ -1,25 +1,52 @@
 from scipy import misc
 import numpy
+import os
 
+# Get the maximum X/Y dimension for each image in this folder
+def getMaxWidthHeight(fileName):
+    imagearr = misc.imread(fileName)
+    return imagearr.shape[0], imagearr.shape[1]
+    
 # read image pixels array
-imagearr = misc.imread('circle_9.png')
-print imagearr.shape
+def populateImageTensor(fileName,imgNumber,tensorArray,w,h):
+    imagearr = misc.imread(fileName)
+    for i in range(w):
+        for j in range(h):
+            for k in range(3):
+                pixel = imagearr[i][j][k]
+                if pixel < 255:
+                    tensorArray[imgNumber][k][i][j] = pixel
+                else:
+                    tensorArray[imgNumber][k][i][j] = -1
 
+# get path for images
+currentPath = os.path.abspath(os.curdir)
+filenames = next(os.walk(currentPath))[2]
+
+imgCount = 0
+processFiles = []
+listofX = []
+listofY = []
+
+for file in filenames:
+    fileName, fileExtension = os.path.splitext(file)
+    if fileExtension == ".png":
+        imgCount = imgCount + 1
+        processFiles.append(file)
+        x,y = getMaxWidthHeight(file)
+        # get the max width, height
+        listofX.append(x)
+        listofY.append(y)
+
+X = max(listofX)
+Y = max(listofY)
+     
 # create 4-d array tensor
-a = numpy.zeros(shape=(10,3,32,32))
-print a.shape
-
-for i in range(32):
-    for j in range(32):
-        for k in range(3):
-            pixel = imagearr[i][j][k]
-            if pixel < 255:
-                #print str(pixel) + " " + str(i) + " " + str(j) + " " + str(k)
-                a[0][k][i][j] = pixel
-            else:
-                a[0][k][i][j] = -1
-   
- #verify if we are correct, get co-ords by uncommenting pixel print above     
-print a[0][0][15][13]
-print a[0][1][15][13]
-print a[0][2][15][13]
+tensorArr = numpy.zeros(shape=(10,3,X,Y))
+      
+i = 0
+for file in processFiles:
+    populateImageTensor(file,i,tensorArr, X, Y)
+    i = i + 1
+    
+print tensorArr
