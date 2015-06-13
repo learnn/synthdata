@@ -1,23 +1,23 @@
 from scipy import misc
-import numpy
+import numpy as np
 import os
 
 # Get the maximum X/Y dimension for each image in this folder
 def getMaxWidthHeight(fileName):
     imagearr = misc.imread(fileName)
     return imagearr.shape[0], imagearr.shape[1]
-    
+
 # read image pixels array
 def populateImageTensor(fileName,imgNumber,tensorArray,w,h):
     imagearr = misc.imread(fileName)
-    for i in range(w):
-        for j in range(h):
-            for k in range(3):
-                pixel = imagearr[i][j][k]
-                if pixel < 255:
-                    tensorArray[imgNumber][k][i][j] = pixel
-                else:
-                    tensorArray[imgNumber][k][i][j] = -1
+    #normalizing the pixel values to be in the range of 0 to 1
+    imagearr = imagearr/255.0
+    imageWidth = imagearr.shape[0]
+    imageHeight = imagearr.shape[1]
+    #create a view of the tensor - its mostly like
+    tensorView = tensorArr[imgNumber,:,0:imageWidth,0:imageHeight]
+    imagearr = np.reshape(imagearr,(3,imageWidth,imageHeight))
+    np.copyto(tensorView,imagearr)
 
 # get path for images
 currentPath = os.path.abspath(os.curdir)
@@ -40,13 +40,12 @@ for file in filenames:
 
 X = max(listofX)
 Y = max(listofY)
-     
+
 # create 4-d array tensor
-tensorArr = numpy.zeros(shape=(10,3,X,Y))
-      
+tensorArr = np.ndarray(shape=(10,3,X,Y),dtype='float64')
+tensorArr.fill(-1)
+
 i = 0
 for file in processFiles:
     populateImageTensor(file,i,tensorArr, X, Y)
     i = i + 1
-    
-print tensorArr
