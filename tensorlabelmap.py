@@ -1,5 +1,5 @@
 import os
-import numpy
+import numpy as np
 
 label  = -1
 
@@ -14,19 +14,11 @@ for file in filenames:
     if fileExtension == ".png":
         imgShape = fileName.split("_")[0]
         if imgShape == "rectangle":
-            label = 0 
+            label = [1,0,0]
         elif imgShape == "circle":
-            label = 1
+            label = [0,1,0]
         elif imgShape == "triangle":
-            label = 2
+            label = [0,0,1]
         labels.append(label)
-        
-labelTensorSize = len(labels)
-tensorArr = numpy.zeros(shape=(labelTensorSize))
 
-i = 0
-for label in labels:
-    tensorArr[i] = int(label)
-    i = i + 1
-
-print tensorArr
+tensorArr = np.array(labels)
