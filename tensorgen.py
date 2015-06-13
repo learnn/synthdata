@@ -14,7 +14,7 @@ def populateImageTensor(fileName,imgNumber,tensorArray,w,h):
     imagearr = imagearr/255.0
     imageWidth = imagearr.shape[0]
     imageHeight = imagearr.shape[1]
-    #create a view of the tensor - its mostly like
+    #create a view of the tensor - a pointer to the 3d array within the 4d array.
     tensorView = tensorArr[imgNumber,:,0:imageWidth,0:imageHeight]
     imagearr = np.reshape(imagearr,(3,imageWidth,imageHeight))
     np.copyto(tensorView,imagearr)
