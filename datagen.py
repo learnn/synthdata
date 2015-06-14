@@ -12,7 +12,8 @@ def drawRect(index):
     position = (x,y)
     fillColor = "rgb({0},{1},{2})".format(random.randint(0, 255),random.randint(0, 255),random.randint(0, 255))
     dr.rectangle((position,size), fill=fillColor)
-    return im.save("rectangle_{0}.png".format(index))
+    #return im.save("rectangle_{0}.png".format(index))
+    return im
 
 def drawTriangle(index):
     im = Image.new('RGB', (32,32), (255,255,255))
@@ -26,7 +27,8 @@ def drawTriangle(index):
     position = (x1,y1,x2,y2,x3,y3)
     fillColor = "rgb({0},{1},{2})".format(random.randint(0, 255),random.randint(0, 255),random.randint(0, 255))
     dr.polygon(position, fill=fillColor)
-    return im.save("triangle_{0}.png".format(index))
+    #return im.save("triangle_{0}.png".format(index))
+    return im
 
 def drawCircle(index):
     im = Image.new('RGB', (32,32), (255,255,255))
@@ -38,7 +40,8 @@ def drawCircle(index):
     bounds = (x,y,width,height)
     fillColor = "rgb({0},{1},{2})".format(random.randint(0, 255),random.randint(0, 255),random.randint(0, 255))
     dr.ellipse(bounds, fill=fillColor)
-    return im.save("circle_{0}.png".format(index))
+    #return im.save("circle_{0}.png".format(index))
+    return im
 
 options = {
     0 : drawRect,
@@ -46,8 +49,10 @@ options = {
     2 : drawCircle
 }
 
-max = 10;
 
-for i in range(max):
-    choice = random.randint(0,2)
-    options[choice](i)
+def get_samples(samples=1000):
+    shapes = []
+    for i in range(samples):
+        choice = random.randint(0,2)
+        shapes.append((options[choice](i),choice))
+    return shapes
