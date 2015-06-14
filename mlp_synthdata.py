@@ -3,17 +3,16 @@ import os
 
 logging.basicConfig(level=logging.INFO)
 
-from deepy.dataset import SynthDataset, MiniBatches
+from deepy.dataset import MiniBatches,BasicDataset
 from deepy.networks import NeuralClassifier
 from deepy.layers import Dense, Softmax
 from deepy.trainers import MomentumTrainer, LearningRateAnnealer
-
-default_model = os.path.join(os.path.dirname(__file__), "models", "mlp_synthdata.gz")
+from SynthDataset import SynthDataset
 
 if __name__ == '__main__':
-   model = NeuralClassifier(input_dim=32*32)
-     model.stack(Dense(1024, 'relu'),
-                 Dense(500, 'relu'),
+    model = NeuralClassifier(input_dim=32*32)
+    model.stack(Dense(256, 'relu'),
+                 Dense(256, 'relu'),
                  Dense(3, 'linear'),
                  Softmax())
 
@@ -21,8 +20,8 @@ if __name__ == '__main__':
 
     annealer = LearningRateAnnealer(trainer)
 
-    mlp_synthDataSet = MiniBatches(SynthDataset(), batch_size=20)
+    mlp_synthDataSet = MiniBatches(SynthDataset())
 
     trainer.run(mlp_synthDataSet, controllers=[annealer])
 
-    model.save_params(default_model)
+    #model.save_params(default_model)
