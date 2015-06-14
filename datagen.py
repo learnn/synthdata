@@ -1,5 +1,8 @@
 from PIL import Image, ImageFont, ImageDraw
 import random
+import os
+import numpy as np
+from scipy import misc
 
 def drawRect(index):
     im = Image.new('RGB', (32,32), (255,255,255))
@@ -49,6 +52,21 @@ options = {
     2 : drawCircle
 }
 
+def get_synthetic_data(samples=1000):
+    imagesamples = get_samples(samples)
+    return get_grayscale_tensor(imagesamples)
+
+
+def get_grayscale_tensor(samples):
+    i = 0
+    grayscales = []
+    for sample in samples:
+        current_image,label = sample
+        current_image = misc.fromimage(current_image)/255.0
+        grayscaled = np.dot(current_image[...,:3], [0.299, 0.587, 0.144])
+        gs = np.reshape(grayscaled,(1024)).tolist()
+        grayscales.append( (gs,label) )
+    return grayscales
 
 def get_samples(samples=1000):
     shapes = []

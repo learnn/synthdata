@@ -11,8 +11,8 @@ from SynthDataset import SynthDataset
 
 if __name__ == '__main__':
     model = NeuralClassifier(input_dim=32*32)
-    model.stack(Dense(256, 'relu'),
-                 Dense(256, 'relu'),
+    model.stack(Dense(100, 'tanh'),
+                 Dense(100, 'tanh'),
                  Dense(3, 'linear'),
                  Softmax())
 
